@@ -16,30 +16,38 @@ namespace ClassLibrary.Entities
     // Changing this class usually means changing the database.
     //
 
-    [Table("character")] // Maps this class to the "character" table
+    [Table("character", Schema = "backend_RPG")] // Maps this class to the "character" table
     public class CharacterEntity
     {
         [Key] // Primary key
-        [Column("hero_id")]
-        public Guid Id { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
 
         [Column("name")]
         public string Name { get; set; } = string.Empty;
 
-        [Column("class")]
-        public string Class { get; set; } = string.Empty;
+        [Column("health")]
+        public int health { get; set; }
 
         [Column("level")]
         public int Level { get; set; }
 
-        [Column("health")]
-        public int Health { get; set; }
+        [Column("strength")]
+        public int strength { get; set; }
 
-        [Column("mana")]
-        public int Mana { get; set; }
+        [Column("charisma")]
+        public int charisma { get; set; }
+        [Column("intelegence")]
+        public int intelegence { get; set; }
+        [Column("wisdome")]
+        public int wisdome { get; set; }
+        [Column("constitution")]
+        public int constitution { get; set; }
+        [Column("dextarity")]
+        public int dextarity { get; set; }
 
         // Exists in the database but NOT exposed to the client
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        // [Column("intelegence")]
+        // public DateTime CreatedAt { get; set; }
     }
 }

@@ -35,10 +35,14 @@ public class CharacterService
             {
                 Id = e.Id,
                 Name = e.Name,
-                Class = e.Class,
+                health = e.health,
                 Level = e.Level,
-                Health = e.Health,
-                Mana = e.Mana
+                strength = e.strength,
+                charisma = e.charisma,
+                intelegence = e.intelegence,
+                wisdome = e.wisdome,
+                constitution = e.constitution,
+                dextarity = e.dextarity,
             })
             .ToListAsync();
     }
@@ -66,12 +70,16 @@ public class CharacterService
         {
             results.Add(new CharacterDTO
             {
-                Id = reader.GetGuid(0),
+                Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Class = reader.GetString(2),
+                health = reader.GetInt32(2),
                 Level = reader.GetInt32(3),
-                Health = reader.GetInt32(4),
-                Mana = reader.GetInt32(5)
+                strength = reader.GetInt32(4),
+                charisma = reader.GetInt32(5),
+                intelegence = reader.GetInt32(6),
+                wisdome = reader.GetInt32(7),
+                constitution = reader.GetInt32(8),
+                dextarity = reader.GetInt32(9),
             });
         }
 

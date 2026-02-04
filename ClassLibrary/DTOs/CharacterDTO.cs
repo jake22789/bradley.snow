@@ -15,16 +15,21 @@
 
     public class CharacterDTO
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; } = string.Empty;
 
-        public string Class { get; set; } = string.Empty;
+        public int health { get; set; }
 
         public int Level { get; set; }
 
-        public int Health { get; set; }
+        public int strength { get; set; }
 
-        public int Mana { get; set; }
+        public int charisma { get; set; }
+        public int intelegence { get; set; }
+        public int wisdome { get; set; }
+        public int constitution { get; set; }
+        public int dextarity { get; set; }
+
     }
 }
