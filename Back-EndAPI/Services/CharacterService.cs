@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.DTOs;
+using ClassLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
 
 //
@@ -60,7 +61,7 @@ public class CharacterService
         // Create a SQL command
         using var cmd = conn.CreateCommand();
         cmd.CommandText = """
-            SELECT hero_id, name, class, level, health, mana
+            SELECT *
             FROM character
         """;
 
@@ -84,5 +85,98 @@ public class CharacterService
         }
 
         return results;
+    }
+
+    public async Task<CharacterDTO?> GetCharacterByIdAsync(int id)
+    {
+        return await _db.Characters
+            .Where(e => e.Id == id)
+            .Select(e => new CharacterDTO
+            {
+                Id = e.Id,
+                Name = e.Name,
+                health = e.health,
+                Level = e.Level,
+                strength = e.strength,
+                charisma = e.charisma,
+                intelegence = e.intelegence,
+                wisdome = e.wisdome,
+                constitution = e.constitution,
+                dextarity = e.dextarity,
+            })
+            .FirstOrDefaultAsync();
+    }
+    public async Task<CharacterDTO> CreateCharacterAsync(CharacterDTO newCharacter)
+    {
+        var entity = new CharacterEntity
+        {
+            Name = newCharacter.Name,
+            health = newCharacter.health,
+            Level = newCharacter.Level,
+            strength = newCharacter.strength,
+            charisma = newCharacter.charisma,
+            intelegence = newCharacter.intelegence,
+            wisdome = newCharacter.wisdome,
+            constitution = newCharacter.constitution,
+            dextarity = newCharacter.dextarity,
+        };
+
+        _db.Characters.Add(entity);
+        await _db.SaveChangesAsync();
+
+        // Map back to DTO (including generated ID)
+        return new CharacterDTO
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            health = entity.health,
+            Level = entity.Level,
+            strength = entity.strength,
+            charisma = entity.charisma,
+            intelegence = entity.intelegence,
+            wisdome = entity.wisdome,
+            constitution = entity.constitution,
+            dextarity = entity.dextarity,
+        };
+    }
+    public async Task<CharacterDTO?> UpdateCharacterAsync(int id, CharacterDTO updatedCharacter)
+    {
+        var entity = await _db.Characters.FindAsync(id);
+        if (entity == null) return null;
+
+        entity.Name = updatedCharacter.Name;
+        entity.health = updatedCharacter.health;
+        entity.Level = updatedCharacter.Level;
+        entity.strength = updatedCharacter.strength;
+        entity.charisma = updatedCharacter.charisma;
+        entity.intelegence = updatedCharacter.intelegence;
+        entity.wisdome = updatedCharacter.wisdome;
+        entity.constitution = updatedCharacter.constitution;
+        entity.dextarity = updatedCharacter.dextarity;
+
+        await _db.SaveChangesAsync();
+
+        return new CharacterDTO
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            health = entity.health,
+            Level = entity.Level,
+            strength = entity.strength,
+            charisma = entity.charisma,
+            intelegence = entity.intelegence,
+            wisdome = entity.wisdome,
+            constitution = entity.constitution,
+            dextarity = entity.dextarity,
+        };
+    }
+    public async Task<bool> DeleteCharacterAsync(int id)
+    {
+        var entity = await _db.Characters.FindAsync(id);
+        if (entity == null) return false;
+
+        _db.Characters.Remove(entity);
+        await _db.SaveChangesAsync();
+        return true;
     }
 }

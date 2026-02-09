@@ -40,3 +40,57 @@ public class CharacterController : ControllerBase
         return Ok(characters);
     }
 }
+[ApiController]
+[Route("create")]
+public class CreateCharacterController : ControllerBase
+{
+    private readonly CharacterService _characterService;
+
+    public CreateCharacterController(CharacterService characterService)
+    {
+        _characterService = characterService;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<CharacterDTO>> CreateCharacter(CharacterDTO newCharacter)
+    {
+        var createdCharacter = await _characterService.CreateCharacterAsync(newCharacter);
+        return Ok(createdCharacter);
+    }
+}
+[ApiController]
+[Route("update")]
+public class UpdateCharacterController : ControllerBase
+{
+    private readonly CharacterService _characterService;
+
+    public UpdateCharacterController(CharacterService characterService)
+    {
+        _characterService = characterService;
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<CharacterDTO?>> UpdateCharacter(int id, CharacterDTO updatedCharacter)
+    {
+        var updated = await _characterService.UpdateCharacterAsync(id, updatedCharacter);
+        return Ok(updated);
+    }
+}
+[ApiController]
+[Route("delete")]
+public class DeleteCharacterController : ControllerBase
+{
+    private readonly CharacterService _characterService;
+
+    public DeleteCharacterController(CharacterService characterService)
+    {
+        _characterService = characterService;
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<bool>> DeleteCharacter(int id)
+    {
+        var deleted = await _characterService.DeleteCharacterAsync(id);
+        return Ok(deleted);
+    }
+}
