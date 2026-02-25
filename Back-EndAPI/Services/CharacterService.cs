@@ -1,4 +1,5 @@
-﻿using ClassLibrary.DTOs;
+﻿using System.Text.RegularExpressions;
+using ClassLibrary.DTOs;
 using ClassLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -108,6 +109,24 @@ public class CharacterService
     }
     public async Task<CharacterDTO> CreateCharacterAsync(CharacterDTO newCharacter)
     {
+        //normalise data (if needed)
+        newCharacter.Name = newCharacter.Name.Trim();
+
+        //validate data (if needed)
+        if(Regex.IsMatch(newCharacter.Name, @"\d"))
+        {
+            throw new Exception("Name cannot contain numbers");
+        }
+        //buisness logic (if needed)
+        var exists = await _db.Characters.AnyAsync(c => c.Name.ToLower() == newCharacter.Name.ToLower());
+        if(exists)        {
+            throw new Exception("Character with this name already exists");
+        }
+        if(newCharacter.Name.ToLower() == "pass")
+        {
+            throw new Exception("you shall not pass");
+        }
+
         var entity = new CharacterEntity
         {
             Name = newCharacter.Name,
@@ -141,6 +160,11 @@ public class CharacterService
     }
     public async Task<CharacterDTO?> UpdateCharacterAsync(int id, CharacterDTO updatedCharacter)
     {
+        if (id != updatedCharacter.Id)
+        {
+            throw new Exception("ID mismatch");
+        }
+        
         var entity = await _db.Characters.FindAsync(id);
         if (entity == null) return null;
 

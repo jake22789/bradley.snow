@@ -1,4 +1,5 @@
-﻿using ClassLibrary.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using ClassLibrary.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 //
@@ -39,34 +40,39 @@ public class CharacterController : ControllerBase
         // Return HTTP 200 OK with JSON data
         return Ok(characters);
     }
-}
-[ApiController]
-[Route("create")]
-public class CreateCharacterController : ControllerBase
-{
-    private readonly CharacterService _characterService;
-
-    public CreateCharacterController(CharacterService characterService)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<CharacterDTO?>> GetCharacterById(int id)
     {
-        _characterService = characterService;
-    }
+        var character = await _characterService.GetCharacterByIdAsync(id);
+        if (character == null)
+        {
+            return NotFound(); 
+        }
+        return Ok(character); 
+    } 
 
     [HttpPost]
     public async Task<ActionResult<CharacterDTO>> CreateCharacter(CharacterDTO newCharacter)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("invalid data");
+        }
+        if (newCharacter.Id != 0)
+        {
+            return BadRequest("Id should not be provided");
+        }
+        try
+        {
+            await _characterService.CreateCharacterAsync(newCharacter);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
         var createdCharacter = await _characterService.CreateCharacterAsync(newCharacter);
         return Ok(createdCharacter);
-    }
-}
-[ApiController]
-[Route("update")]
-public class UpdateCharacterController : ControllerBase
-{
-    private readonly CharacterService _characterService;
-
-    public UpdateCharacterController(CharacterService characterService)
-    {
-        _characterService = characterService;
     }
 
     [HttpPut("{id}")]
@@ -74,17 +80,6 @@ public class UpdateCharacterController : ControllerBase
     {
         var updated = await _characterService.UpdateCharacterAsync(id, updatedCharacter);
         return Ok(updated);
-    }
-}
-[ApiController]
-[Route("delete")]
-public class DeleteCharacterController : ControllerBase
-{
-    private readonly CharacterService _characterService;
-
-    public DeleteCharacterController(CharacterService characterService)
-    {
-        _characterService = characterService;
     }
 
     [HttpDelete("{id}")]

@@ -1,4 +1,6 @@
-﻿namespace ClassLibrary.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ClassLibrary.DTOs
 {
     //
     // DTO ROLE
@@ -17,18 +19,27 @@
     {
         public int Id { get; set; }
 
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
+        [Required]
         public int health { get; set; }
 
+        [Required]
         public int Level { get; set; }
 
+        [Range(5, 20)]
         public int strength { get; set; }
-
+        [Range(5, 20)]
         public int charisma { get; set; }
+        [Range(5, 20)]
         public int intelegence { get; set; }
+        [Range(5, 20)]
         public int wisdome { get; set; }
+        [Range(5, 20)]
         public int constitution { get; set; }
+        [Range(5, 20)]
         public int dextarity { get; set; }
 
     }
