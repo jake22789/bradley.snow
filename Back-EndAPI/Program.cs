@@ -39,6 +39,14 @@ using (var scope = app.Services.CreateScope())
     conn.Open();
     Console.WriteLine("Connected to Postgres!");
 }
+using (var scope = app.Services.CreateScope())
+{
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var connString = config.GetConnectionString("class.rw");
+    using var conn = new Npgsql.NpgsqlConnection(connString);
+    conn.Open();
+    Console.WriteLine("Connected to Postgres!rw");
+}
 
 app.UseCors();
 
